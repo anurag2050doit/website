@@ -1,0 +1,50 @@
+{% extends 'music/base.html' %}
+{% block title %}Add New Song{% endblock %}
+{% block songs_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Add New Song</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% include 'music/form-template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>What is Picric?</h3>
+                    <p>Viberr is an app that allows you to upload and store all of your music on the cloud.</p>
+                    <h3>How do I add music?</h3>
+                    <p>Upload a song by providing a song title and uploading the song file.</p>
+                    <h3>What are some Album logo best practices?</h3>
+                    <ul>
+                        <li>Use common music formats such as .MP3, .WAV, or .OGG</li>
+                        <li>Remain under the 20MB limit.</li>
+                        <li>Upload High Quality Songs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

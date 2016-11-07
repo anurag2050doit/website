@@ -1,0 +1,176 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'music/favicon.ico' %}"/>
+    <title>{% block title %}Picric{% endblock %}</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.1.1/css/mdb.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.1.1/js/mdb.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <title>My Audio Player</title>
+    <link href="{% static 'music/dist/skin/blue.monday/css/jplayer.blue.monday.min.css' %}" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{% static 'music/lib/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'music/dist/jplayer/jquery.jplayer.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'music/dist/add-on/jplayer.playlist.min.js' %}"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+
+      new jPlayerPlaylist({
+        jPlayer: "#jquery_jplayer_1",
+        cssSelectorAncestor: "#jp_container_1"
+      }, [
+      {% for song in album.song_set.all %}
+        {
+          title:"{{ song.song_title }}",
+          artist:"{{ album.artist }}",
+          mp3:"{{ song.song_file.url }}",
+          oga:"{{ song.song_file.url }}",
+          poster: "{{ album.album_logo.url }}"
+        },
+      {% endfor %}
+      ], {
+        swfPath: "../../dist/jplayer",
+        supplied: "webmv, ogv, m4v, oga, mp3",
+        useStateClassSkin: true,
+        autoBlur: false,
+        smoothPlayBar: true,
+        keyEnabled: true,
+        audioFullScreen: true
+      });
+    });
+    //]]>
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=#topNavBar>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'music:index' %}">Picric</a>
+        </div>
+        <div class="collapse navbar-collapse" id="topNavBar">
+          <ul class="nav navbar-nav">
+            <li class="{% block albums_active %}{% endblock %}">
+              <a href="{% url 'music:index' %}">
+                <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp;
+                Albums
+              </a>
+            </li>
+            <li class="{% block songs_active %}{% endblock %}">
+              <a href="{% url 'music:songs' 'all' %}">
+                <span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp;
+                Songs
+              </a>
+            </li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
+            <div class="form-group">
+              <input type="text" name="q" value="" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-default">Search</button>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+            {% if username %}
+            <li class="{% block add_album %}{% endblock %}">
+              <a href="{% url 'music:album-add' %}">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+                Add Album
+              </a>
+            </li>
+            {% endif %}
+            {% if not username %}
+            <li class="{% block register_active %}{% endblock %}">
+              <a href="{% url 'music:register' %}">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"> 
+              </span>&nbsp;
+                Signup
+              </a>
+            </li>
+            <li class="{% block login_active %}{% endblock %}">
+              <a href="{% url 'music:login_user' %}">
+              <span class="glyphicon glyphicon-off" aria-hidden="true"> 
+              </span>&nbsp;
+                Login
+              </a>
+            </li>
+            {% else %}
+            <li class="">
+              <a href="{% url 'music:logout_user' %}">
+              <span class="glyphicon glyphicon-off" aria-hidden="true"> 
+              </span>&nbsp;
+                {{ username }}|Logout
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div id="jp_container_1" class="jp-video jp-video-270p centre" role="application" aria-label="media player">
+  <div class="jp-type-playlist">
+    <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+    <div class="jp-gui">
+      <div class="jp-video-play">
+        <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
+      </div>
+      <div class="jp-interface">
+        <div class="jp-progress">
+          <div class="jp-seek-bar">
+            <div class="jp-play-bar"></div>
+          </div>
+        </div>
+        <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+        <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+        <div class="jp-controls-holder">
+          <div class="jp-controls">
+            <button class="jp-previous" role="button" tabindex="0">previous</button>
+            <button class="jp-play" role="button" tabindex="0">play</button>
+            <button class="jp-next" role="button" tabindex="0">next</button>
+            <button class="jp-stop" role="button" tabindex="0">stop</button>
+          </div>
+          <div class="jp-volume-controls">
+            <button class="jp-mute" role="button" tabindex="0">mute</button>
+            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+            <div class="jp-volume-bar">
+              <div class="jp-volume-bar-value"></div>
+            </div>
+          </div>
+          <div class="jp-toggles">
+            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+            <button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
+            <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+          </div>
+        </div>
+        <div class="jp-details">
+          <div class="jp-title" aria-label="title">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-playlist">
+      <ul>
+        <!-- The method Playlist.displayPlaylist() uses this unordered list -->
+        <li>&nbsp;</li>
+      </ul>
+    </div>
+    <div class="jp-no-solution">
+      <span>Update Required</span>
+      To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+    </div>
+  </div>
+</div>
+  </body>
+
+</html>
