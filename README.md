@@ -1,3 +1,26 @@
+#INSTALL
+
+## Local installation
+To run your favorite Music Application 
+Follow the following Step(on Windows)
+
+1) Install python 3.5
+2) Install pip
+3) pip install django
+
+Then open cmd in adminstration mode
+
+```
+cd website
+python manage.py runserver
+
+```
+
+Open brower visit [Localhost/music](https://127.0.0.1/music/)
+
+
+**Enjoy PICRIC **
+
 # PICRIC
 ## YOUR FAV MUSIC APPLICATION
 
